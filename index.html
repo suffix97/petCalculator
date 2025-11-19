@@ -131,3 +131,59 @@
   <main>
     <div class="pet-images">
       <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="狗狗">
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="貓貓">
+    </div>
+
+    <label for="petBirth">輸入寵物生日：</label>
+    <input type="date" id="petBirth">
+    <button onclick="calculateAge()">計算</button>
+    <p id="result"></p>
+  </main>
+
+  <footer>
+    Reference: 寵物年齡轉換公式來源於 
+    <a href="https://animalagecalculator.online/" target="_blank">Animal Age Calculator</a>、
+    <a href="https://www.gigacalculator.com/calculators/dog-years-calculator.php" target="_blank">Dog Years Calculator</a>
+  </footer>
+
+  <script>
+    // 預設載入 localStorage
+    window.onload = function() {
+      const savedBirth = localStorage.getItem("petBirth");
+      if (savedBirth) {
+        document.getElementById("petBirth").value = savedBirth;
+      }
+    };
+
+    function calculateAge() {
+      const birthInput = document.getElementById("petBirth").value;
+      if (!birthInput) {
+        document.getElementById("result").innerText = "請輸入有效日期";
+        return;
+      }
+
+      // 存入 localStorage
+      localStorage.setItem("petBirth", birthInput);
+
+      const birthDate = new Date(birthInput);
+      const today = new Date();
+      let ageYears = today.getFullYear() - birthDate.getFullYear();
+      const ageMonths = today.getMonth() - birthDate.getMonth();
+      if (ageMonths < 0 || (ageMonths === 0 && today.getDate() < birthDate.getDate())) {
+        ageYears--;
+      }
+
+      // 狗狗公式：前兩年每年約等於 10.5 人類年，之後每年約等於 4 人類年
+      let humanAge;
+      if (ageYears <= 2) {
+        humanAge = ageYears * 10.5;
+      } else {
+        humanAge = 21 + (ageYears - 2) * 4;
+      }
+
+      document.getElementById("result").innerText =
+        `🐶🐱 寵物年齡：${ageYears} 歲，相當於人類 ${humanAge} 歲`;
+    }
+  </script>
+</body>
+</html>
